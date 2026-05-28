@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: Create launcher with full design
+      - name: Create launcher
         shell: cmd
         run: |
           chcp 65001 > nul
@@ -16,7 +16,7 @@ jobs:
             echo body { background: #0b0e17; font-family: 'Segoe UI', sans-serif; color: white; margin: 0; padding: 20px; }
             echo .container { max-width: 1200px; margin: 0 auto; }
             echo .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-            echo .logo { font-size: 28px; font-weight: bold; background: linear-gradient(135deg, #fff, #3b82f6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+            echo .logo { font-size: 28px; font-weight: bold; color: #3b82f6; }
             echo .online-badge { background: rgba(59,130,246,0.2); padding: 8px 20px; border-radius: 40px; }
             echo .main-grid { display: grid; grid-template-columns: 1fr 350px; gap: 30px; margin-bottom: 30px; }
             echo .chat-card, .profile-card, .servers-card, .news-card { background: rgba(18,25,45,0.6); border-radius: 32px; padding: 20px; margin-bottom: 20px; }
@@ -42,7 +42,7 @@ jobs:
             echo ^<div class="profile-card"^>^<div class="avatar"^>🔥^</div^>^<div class="input-group"^>^<input type="text" id="nickInput" placeholder="Никнейм"^>^</div^>^<div class="input-group"^>^<input type="password" id="passInput" placeholder="Пароль"^>^</div^>^<div class="input-group"^>^<input type="password" id="cloudPassInput" placeholder="Облачный пароль"^>^</div^>^<button onclick="openLogin()" class="btn-outline" style="margin-right:8px"^>Вход^</button^>^<button onclick="openRegister()" class="btn-primary"^>Регистрация^</button^>^<div id="userPanel" style="display:none; text-align:center; margin-top:10px"^>^<span id="usernameDisplay"^>^</span^>^<button onclick="logout()"^>Выйти^</button^>^</div^>^<button onclick="saveProfile()" style="width:100%; margin-top:10px"^>Сохранить профиль^</button^>^</div^>
             echo ^</div^>
             echo ^<div class="servers-card"^>^<h3^>Наши серверы^</h3^>^<div class="servers-grid"^>^<div class="server-card"^>^<div^>^<b^>GrifMC Pro^</b^>^<br^>^<span style="font-family:monospace; font-size:12px; color:#3b82f6"^>grifmcpro.aternos.me:18014^</span^>^</div^>^<button onclick="playGame('grifmcpro.aternos.me:18014')"^>Играть^</button^>^</div^>^<div class="server-card"^>^<div^>^<b^>Vanilla World^</b^>^<br^>^<span style="font-family:monospace; font-size:12px; color:#3b82f6"^>vanilla.grifmc.ru:25565^</span^>^</div^>^<button onclick="playGame('vanilla.grifmc.ru:25565')"^>Играть^</button^>^</div^>^<div class="server-card"^>^<div^>^<b^>PvP Arena^</b^>^<br^>^<span style="font-family:monospace; font-size:12px; color:#3b82f6"^>pvp.grifmc.ru:25565^</span^>^</div^>^<button onclick="playGame('pvp.grifmc.ru:25565')"^>Играть^</button^>^</div^>^</div^>^</div^>
-            echo ^<div class="news-card"^>^<h3^>Новости и акции^</h3^>^<div class="news-grid"^>^<div class="news-item"^>🎁 Новый донат-ранг Легенда^</div^>^<div class="news-item"^>🛡️ Защита от гриферов^</div^>^<div class="news-item"^>📅 Ивент в субботу^</div^>^</div^>^</div^>
+            echo ^<div class="news-card"^>^<h3^>Новости и акции^</h3^>^<div class="news-grid"^>^<div class="news-item"^>Новый донат-ранг Легенда^</div^>^<div class="news-item"^>Защита от гриферов^</div^>^<div class="news-item"^>Ивент в субботу^</div^>^</div^>^</div^>
             echo ^<div class="footer"^>GrifLauncher — ваш проводник в мир Minecraft^</div^>
             echo ^</div^>
             echo ^<script^>
@@ -72,8 +72,8 @@ jobs:
             echo     currentUser = nick;
             echo     localStorage.setItem('griflauncher_current_user', currentUser);
             echo     renderUI();
-            echo     alert('Вход выполнен!');
-            echo   } else alert('Неверный логин или пароль');
+            echo     alert('Вход выполнен');
+            echo   } else alert('Неверно');
             echo }
             echo function openRegister() {
             echo   let nick = prompt('Никнейм');
@@ -87,7 +87,7 @@ jobs:
             echo   currentUser = nick;
             echo   localStorage.setItem('griflauncher_current_user', currentUser);
             echo   renderUI();
-            echo   alert('Регистрация успешна!');
+            echo   alert('Регистрация успешна');
             echo }
             echo function logout() {
             echo   currentUser = null;
@@ -95,7 +95,7 @@ jobs:
             echo   renderUI();
             echo }
             echo function saveProfile() {
-            echo   if (!currentUser) { alert('Сначала войдите'); return; }
+            echo   if (!currentUser) { alert('Войдите'); return; }
             echo   let nick = document.getElementById('nickInput').value;
             echo   let pass = document.getElementById('passInput').value;
             echo   let cloudPass = document.getElementById('cloudPassInput').value;
@@ -109,7 +109,7 @@ jobs:
             echo   users[currentUser] = { password: pass, cloudPassword: cloudPass };
             echo   localStorage.setItem('griflauncher_users', JSON.stringify(users));
             echo   renderUI();
-            echo   alert('Профиль сохранён!');
+            echo   alert('Сохранено');
             echo }
             echo function renderMessages() {
             echo   let container = document.getElementById('messagesList');
