@@ -1,4 +1,4 @@
-name: Build Electron Launcher
+name: Build HTA Launcher
 
 on:
   workflow_dispatch:
@@ -7,37 +7,29 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install Electron
-        run: npm install -g electron
-
-      - name: Create main.js
+      - name: Create launcher
+        shell: cmd
         run: |
-          echo "const { app, BrowserWindow } = require('electron');" > main.js
-          echo "function createWindow() {" >> main.js
-          echo "  const win = new BrowserWindow({ width: 1200, height: 800 });" >> main.js
-          echo "  win.loadFile('index.html');" >> main.js
-          echo "}" >> main.js
-          echo "app.whenReady().then(createWindow);" >> main.js
+          echo ^<html^> > launcher.hta
+          echo ^<head^> >> launcher.hta
+          echo ^<title^>Grif Launcher^</title^> >> launcher.hta
+          echo ^<style^> >> launcher.hta
+          echo body { background: #0a0f1a; color: white; font-family: sans-serif; text-align: center; padding: 50px; } >> launcher.hta
+          echo button { background: #3b82f6; color: white; border: none; padding: 15px 40px; font-size: 20px; cursor: pointer; } >> launcher.hta
+          echo ^</style^> >> launcher.hta
+          echo ^</head^> >> launcher.hta
+          echo ^<body^> >> launcher.hta
+          echo ^<h1^>🔥 GRIF LAUNCHER^</h1^> >> launcher.hta
+          echo ^<p^>IP: grifmcpro.aternos.me:18014^</p^> >> launcher.hta
+          echo ^<button onclick="window.location.href='minecraft://?server=grifmcpro.aternos.me:18014'"^>🎮 ИГРАТЬ^</button^> >> launcher.hta
+          echo ^</body^> >> launcher.hta
+          echo ^</html^> >> launcher.hta
 
-      - name: Create index.html
-        run: |
-          echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grif Launcher</title><style>body{background:#0a0f1a;color:white;font-family:sans-serif;text-align:center;padding:50px;}</style></head><body><h1>🔥 GRIF LAUNCHER</h1><p>IP: grifmcpro.aternos.me:18014</p><button onclick="window.location.href=\'minecraft://?server=grifmcpro.aternos.me:18014\'">🎮 ИГРАТЬ</button></body></html>' > index.html
-
-      - name: Package Electron app
-        run: |
-          npm install -g electron-packager
-          electron-packager . GrifLauncher --platform=win32 --arch=x64 --out=dist --overwrite
+      - name: Create ZIP
+        run: Compress-Archive -Path launcher.hta -DestinationPath GrifLauncher.zip
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: GrifLauncher
-          path: dist/GrifLauncher-win32-x64
+          path: GrifLauncher.zip
