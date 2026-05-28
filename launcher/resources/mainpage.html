@@ -2,73 +2,127 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grif Launcher</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             background: linear-gradient(135deg, #0a0f1a 0%, #0f1724 100%);
-            font-family: system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             color: white;
             padding: 20px;
         }
-        .container { max-width: 1200px; margin: 0 auto; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 15px 30px;
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
             margin-bottom: 30px;
         }
-        .logo { font-size: 28px; font-weight: bold; color: #3b82f6; }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #fff, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
         .btn {
-            padding: 10px 20px;
+            padding: 10px 24px;
             border-radius: 40px;
             border: none;
+            font-weight: 600;
             cursor: pointer;
-            font-weight: bold;
+            transition: all 0.2s;
         }
-        .btn-primary { background: #3b82f6; color: white; }
-        .btn-outline { background: transparent; border: 1px solid #3b82f6; color: #3b82f6; }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: scale(1.02);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+        }
+
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 350px;
             gap: 30px;
         }
+
         .chat-section {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 20px;
         }
+
         .messages {
-            height: 400px;
+            height: 500px;
             overflow-y: auto;
             margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
+
         .message {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 16px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
+            padding: 10px 15px;
         }
+
+        .message-mine {
+            background: #3b82f6;
+            align-self: flex-end;
+        }
+
         .chat-input {
             display: flex;
             gap: 10px;
         }
+
         .chat-input input {
             flex: 1;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid #3b82f6;
             border-radius: 40px;
             color: white;
         }
+
         .profile-section {
-            background: rgba(0,0,0,0.3);
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
             border-radius: 24px;
             padding: 20px;
         }
+
         .avatar {
             width: 80px;
             height: 80px;
@@ -80,18 +134,19 @@
             font-size: 40px;
             margin: 0 auto 20px;
         }
+
         .input-group {
             margin-bottom: 15px;
         }
+
         .input-group input {
             width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid #3b82f6;
             border-radius: 12px;
             color: white;
         }
-        button { width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -167,7 +222,7 @@
             localStorage.setItem('griflauncher_current_user', currentUser);
             renderUI();
             alert('Вход выполнен!');
-        } else alert('Неверно');
+        } else alert('Неверный логин или пароль');
     }
 
     function openRegister() {
@@ -206,7 +261,7 @@
         users[currentUser] = { password: pass, cloudPassword: cloudPass };
         localStorage.setItem('griflauncher_users', JSON.stringify(users));
         renderUI();
-        alert('Сохранено!');
+        alert('Профиль сохранён!');
     }
 
     function renderMessages() {
@@ -232,16 +287,16 @@
     }
 
     function playGame() {
-        alert('Запуск Minecraft с сервером grifmcpro.aternos.me:18014');
-        // Здесь будет запуск Minecraft через командную строку
+        window.location.href = "minecraft://?server=grifmcpro.aternos.me:18014";
     }
 
-    renderUI();
-    renderMessages();
     setInterval(() => {
         messages = JSON.parse(localStorage.getItem('griflauncher_messages') || '[]');
         renderMessages();
     }, 2000);
+
+    renderUI();
+    renderMessages();
 </script>
 </body>
 </html>
