@@ -1,11 +1,11 @@
-name: Build Launcher
+name: Build Electron Launcher
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -15,13 +15,29 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Create launcher
+      - name: Install Electron
+        run: npm install -g electron
+
+      - name: Create main.js
         run: |
-          echo "✅ Твой лаунчер готов" > launcher.txt
-          echo "IP: grifmcpro.aternos.me:18014" >> launcher.txt
+          echo "const { app, BrowserWindow } = require('electron');" > main.js
+          echo "function createWindow() {" >> main.js
+          echo "  const win = new BrowserWindow({ width: 1200, height: 800 });" >> main.js
+          echo "  win.loadFile('index.html');" >> main.js
+          echo "}" >> main.js
+          echo "app.whenReady().then(createWindow);" >> main.js
+
+      - name: Create index.html
+        run: |
+          echo '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Grif Launcher</title><style>body{background:#0a0f1a;color:white;font-family:sans-serif;text-align:center;padding:50px;}</style></head><body><h1>🔥 GRIF LAUNCHER</h1><p>IP: grifmcpro.aternos.me:18014</p><button onclick="window.location.href=\'minecraft://?server=grifmcpro.aternos.me:18014\'">🎮 ИГРАТЬ</button></body></html>' > index.html
+
+      - name: Package Electron app
+        run: |
+          npm install -g electron-packager
+          electron-packager . GrifLauncher --platform=win32 --arch=x64 --out=dist --overwrite
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: GrifLauncher
-          path: launcher.txt
+          path: dist/GrifLauncher-win32-x64
