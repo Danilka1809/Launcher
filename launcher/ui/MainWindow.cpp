@@ -1,19 +1,17 @@
 #include "MainWindow.h"
+#include <QWebEngineView>
+#include <QDir>
+#include <QUrl>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    // Создаём веб-вью
     webView = new QWebEngineView(this);
-    
-    // Делаем его центральным виджетом (занимает всё окно)
     setCentralWidget(webView);
     
-    // Загружаем нашу HTML страницу из ресурсов
-    webView->load(QUrl("qrc:///mainpage.html"));
+    // Загружаем HTML из папки resources
+    QString htmlPath = QDir::currentPath() + "/resources/mainpage.html";
+    webView->load(QUrl::fromLocalFile(htmlPath));
 }
 
-MainWindow::~MainWindow()
-{
-    // Очистка (Qt сам всё удалит)
-}
+MainWindow::~MainWindow() {}
