@@ -12,5 +12,5 @@ public:
     ~MainWindow();
 
 private:
-    QWebEngineView *webView;  // Это компонент, который показывает HTML страницу
+    QWebEngineView *webView;
 };
