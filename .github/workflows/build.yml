@@ -7,23 +7,20 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: Create launcher
+      - name: Create launcher with proper encoding
         shell: cmd
         run: |
-          echo ^<html^> > launcher.hta
-          echo ^<head^> >> launcher.hta
-          echo ^<title^>Grif Launcher^</title^> >> launcher.hta
-          echo ^<style^> >> launcher.hta
-          echo body { background: #0a0f1a; color: white; font-family: sans-serif; text-align: center; padding: 50px; } >> launcher.hta
-          echo button { background: #3b82f6; color: white; border: none; padding: 15px 40px; font-size: 20px; cursor: pointer; } >> launcher.hta
-          echo ^</style^> >> launcher.hta
-          echo ^</head^> >> launcher.hta
-          echo ^<body^> >> launcher.hta
-          echo ^<h1^>🔥 GRIF LAUNCHER^</h1^> >> launcher.hta
-          echo ^<p^>IP: grifmcpro.aternos.me:18014^</p^> >> launcher.hta
-          echo ^<button onclick="window.location.href='minecraft://?server=grifmcpro.aternos.me:18014'"^>🎮 ИГРАТЬ^</button^> >> launcher.hta
-          echo ^</body^> >> launcher.hta
-          echo ^</html^> >> launcher.hta
+          chcp 65001 > nul
+          (echo ^<html^>^<head^>^<meta charset="UTF-8"^>^<title^>Grif Launcher^</title^>^<style^>
+          echo body { background: #0a0f1a; font-family: 'Segoe UI', sans-serif; color: white; text-align: center; padding: 50px; }
+          echo button { background: #3b82f6; color: white; border: none; padding: 15px 40px; font-size: 20px; cursor: pointer; border-radius: 60px; }
+          echo .btn-play { margin-top: 30px; }
+          echo ^</style^>^</head^>^<body^>
+          echo ^<h1^>^<span style="color:#3b82f6"^>GRIF^</span^> LAUNCHER^</h1^>
+          echo ^<p^>IP: grifmcpro.aternos.me:18014^</p^>
+          echo ^<button class="btn-play" onclick="window.location.href='minecraft://?server=grifmcpro.aternos.me:18014'"^>ИГРАТЬ^</button^>
+          echo ^<p style="margin-top: 30px; font-size: 12px; color: #666;"^>GrifLauncher ^| ^(c^) 2026^</p^>
+          echo ^</body^>^</html^>) > launcher.hta
 
       - name: Create ZIP
         run: Compress-Archive -Path launcher.hta -DestinationPath GrifLauncher.zip
