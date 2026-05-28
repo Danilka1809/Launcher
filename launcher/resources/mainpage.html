@@ -1,32 +1,382 @@
-name: Build HTA Launcher
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>GrifLauncher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0b0e17;
+            font-family: 'Inter', system-ui, sans-serif;
+            color: #eef2ff;
+            padding: 24px 20px;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+        /* Шапка как на NLauncher */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 48px;
+            flex-wrap: wrap;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .live-badge {
+            background: rgba(59,130,246,0.15);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+        }
+        /* Основная сетка */
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 360px;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+        /* Статистика */
+        .stats-card {
+            background: rgba(18, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 24px;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .stats-grid {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 800;
+            color: #3b82f6;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: #8b9dc3;
+        }
+        /* Чат */
+        .chat-card {
+            background: rgba(18, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 24px;
+            border: 1px solid rgba(59,130,246,0.2);
+            margin-top: 24px;
+        }
+        .messages {
+            height: 280px;
+            overflow-y: auto;
+            margin: 16px 0;
+        }
+        .message {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 8px 14px;
+            margin-bottom: 8px;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #3b82f6;
+            border-radius: 60px;
+            color: white;
+        }
+        /* Профиль */
+        .profile-card {
+            background: rgba(18, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 24px;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 16px;
+        }
+        .input-group {
+            margin-bottom: 16px;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #3b82f6;
+            border-radius: 60px;
+            color: white;
+        }
+        .btn {
+            padding: 10px 20px;
+            border-radius: 60px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+        }
+        /* Каталог серверов (без онлайна) */
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        .server-card {
+            background: rgba(18, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .server-name {
+            font-weight: 700;
+        }
+        .server-ip {
+            font-family: monospace;
+            font-size: 12px;
+            color: #3b82f6;
+            margin-top: 4px;
+        }
+        /* Новости вместо Discord */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .news-card {
+            background: rgba(18, 25, 45, 0.6);
+            backdrop-filter: blur(12px);
+            border-radius: 32px;
+            padding: 20px;
+            border: 1px solid rgba(59,130,246,0.2);
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #6c7a91;
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(59,130,246,0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">NLAUNCHER</div>
+        <div class="live-badge">🔥 2 847 играют прямо сейчас</div>
+    </div>
 
-on:
-  workflow_dispatch:
+    <div class="hero-grid">
+        <div>
+            <div class="stats-card">
+                <div class="stats-grid">
+                    <div class="stat-item"><div class="stat-number">12 847</div><div class="stat-label">игроков всего</div></div>
+                    <div class="stat-item"><div class="stat-number">824</div><div class="stat-label">серверов</div></div>
+                    <div class="stat-item"><div class="stat-number">47 230</div><div class="stat-label">модов</div></div>
+                </div>
+            </div>
+            <div class="chat-card">
+                <h3 style="margin-bottom: 12px;">🌐 Глобальный чат</h3>
+                <div class="messages" id="messagesList"></div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Написать...">
+                    <button class="btn btn-primary" onclick="sendMessage()">Отправить</button>
+                </div>
+            </div>
+        </div>
+        <div class="profile-card">
+            <div class="avatar">🔥</div>
+            <div class="input-group"><input type="text" id="nickInput" placeholder="Никнейм"></div>
+            <div class="input-group"><input type="password" id="passInput" placeholder="Пароль"></div>
+            <div class="input-group"><input type="password" id="cloudPassInput" placeholder="Облачный пароль"></div>
+            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                <button class="btn btn-outline" onclick="openLogin()" style="flex:1">Вход</button>
+                <button class="btn btn-primary" onclick="openRegister()" style="flex:1">Регистрация</button>
+            </div>
+            <div id="userPanel" style="display: none; text-align: center;">
+                <span id="usernameDisplay"></span>
+                <button class="btn btn-outline" onclick="logout()" style="margin-top: 10px;">Выйти</button>
+            </div>
+            <button class="btn btn-primary" onclick="saveProfile()" style="width:100%">Сохранить профиль</button>
+        </div>
+    </div>
 
-jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-      - name: Create launcher with proper encoding
-        shell: cmd
-        run: |
-          chcp 65001 > nul
-          (echo ^<html^>^<head^>^<meta charset="UTF-8"^>^<title^>Grif Launcher^</title^>^<style^>
-          echo body { background: #0a0f1a; font-family: 'Segoe UI', sans-serif; color: white; text-align: center; padding: 50px; }
-          echo button { background: #3b82f6; color: white; border: none; padding: 15px 40px; font-size: 20px; cursor: pointer; border-radius: 60px; }
-          echo .btn-play { margin-top: 30px; }
-          echo ^</style^>^</head^>^<body^>
-          echo ^<h1^>^<span style="color:#3b82f6"^>GRIF^</span^> LAUNCHER^</h1^>
-          echo ^<p^>IP: grifmcpro.aternos.me:18014^</p^>
-          echo ^<button class="btn-play" onclick="window.location.href='minecraft://?server=grifmcpro.aternos.me:18014'"^>ИГРАТЬ^</button^>
-          echo ^<p style="margin-top: 30px; font-size: 12px; color: #666;"^>GrifLauncher ^| ^(c^) 2026^</p^>
-          echo ^</body^>^</html^>) > launcher.hta
+    <div class="servers-section">
+        <div class="section-title">🎮 Наши серверы</div>
+        <div class="servers-grid">
+            <div class="server-card"><div><div class="server-name">GrifMC Pro</div><div class="server-ip">grifmcpro.aternos.me:18014</div></div><button class="btn btn-primary" onclick="playGame('grifmcpro.aternos.me:18014')">Играть</button></div>
+            <div class="server-card"><div><div class="server-name">Vanilla World</div><div class="server-ip">vanilla.grifmc.ru:25565</div></div><button class="btn btn-primary" onclick="playGame('vanilla.grifmc.ru:25565')">Играть</button></div>
+            <div class="server-card"><div><div class="server-name">PvP Arena</div><div class="server-ip">pvp.grifmc.ru:25565</div></div><button class="btn btn-primary" onclick="playGame('pvp.grifmc.ru:25565')">Играть</button></div>
+        </div>
+    </div>
 
-      - name: Create ZIP
-        run: Compress-Archive -Path launcher.hta -DestinationPath GrifLauncher.zip
+    <div class="news-section">
+        <div class="section-title">📢 Новости и акции</div>
+        <div class="news-grid">
+            <div class="news-card">🎁 Новый донат-ранг «Легенда» — /fly, /god, /kit legend</div>
+            <div class="news-card">🛡️ Защита от гриферов — WorldGuard и приваты</div>
+            <div class="news-card">📅 Ивент в субботу — клановая битва, вход через /event</div>
+        </div>
+    </div>
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: GrifLauncher
-          path: GrifLauncher.zip
+    <div class="footer">
+        NLauncher — кроссплатформенный лаунчер для Minecraft
+    </div>
+</div>
+
+<script>
+    let users = JSON.parse(localStorage.getItem('griflauncher_users') || '{}');
+    let currentUser = localStorage.getItem('griflauncher_current_user');
+    let messages = JSON.parse(localStorage.getItem('griflauncher_messages') || '[]');
+
+    function renderUI() {
+        if (currentUser) {
+            document.getElementById('userPanel').style.display = 'block';
+            document.getElementById('usernameDisplay').innerText = currentUser;
+            let user = users[currentUser];
+            if (user) {
+                document.getElementById('nickInput').value = currentUser;
+                document.getElementById('passInput').value = user.password;
+                document.getElementById('cloudPassInput').value = user.cloudPassword;
+            }
+        } else {
+            document.getElementById('userPanel').style.display = 'none';
+        }
+    }
+
+    function openLogin() {
+        let nick = prompt('Никнейм');
+        if (!nick) return;
+        let pass = prompt('Пароль');
+        if (!pass) return;
+        if (users[nick] && users[nick].password === pass) {
+            currentUser = nick;
+            localStorage.setItem('griflauncher_current_user', currentUser);
+            renderUI();
+            alert('Вход выполнен!');
+        } else alert('Неверный логин или пароль');
+    }
+
+    function openRegister() {
+        let nick = prompt('Никнейм');
+        if (!nick || users[nick]) { alert('Ник занят'); return; }
+        let pass = prompt('Пароль');
+        if (!pass) return;
+        let cloudPass = prompt('Облачный пароль');
+        if (!cloudPass) return;
+        users[nick] = { password: pass, cloudPassword: cloudPass };
+        localStorage.setItem('griflauncher_users', JSON.stringify(users));
+        currentUser = nick;
+        localStorage.setItem('griflauncher_current_user', currentUser);
+        renderUI();
+        alert('Регистрация успешна!');
+    }
+
+    function logout() {
+        currentUser = null;
+        localStorage.removeItem('griflauncher_current_user');
+        renderUI();
+    }
+
+    function saveProfile() {
+        if (!currentUser) { alert('Сначала войдите'); return; }
+        let nick = document.getElementById('nickInput').value;
+        let pass = document.getElementById('passInput').value;
+        let cloudPass = document.getElementById('cloudPassInput').value;
+        if (nick !== currentUser) {
+            if (users[nick]) { alert('Ник занят'); return; }
+            users[nick] = users[currentUser];
+            delete users[currentUser];
+            currentUser = nick;
+            localStorage.setItem('griflauncher_current_user', currentUser);
+        }
+        users[currentUser] = { password: pass, cloudPassword: cloudPass };
+        localStorage.setItem('griflauncher_users', JSON.stringify(users));
+        renderUI();
+        alert('Профиль сохранён!');
+    }
+
+    function renderMessages() {
+        let container = document.getElementById('messagesList');
+        container.innerHTML = '';
+        messages.forEach(msg => {
+            let div = document.createElement('div');
+            div.className = 'message';
+            div.innerHTML = `<b>${msg.author}:</b> ${msg.text}`;
+            container.appendChild(div);
+        });
+    }
+
+    function sendMessage() {
+        let input = document.getElementById('messageInput');
+        let text = input.value.trim();
+        if (!text) return;
+        let author = currentUser || 'Гость';
+        messages.push({ author, text, time: Date.now() });
+        localStorage.setItem('griflauncher_messages', JSON.stringify(messages));
+        input.value = '';
+        renderMessages();
+    }
+
+    function playGame(ip) {
+        window.location.href = `minecraft://?server=${ip}`;
+    }
+
+    setInterval(() => {
+        messages = JSON.parse(localStorage.getItem('griflauncher_messages') || '[]');
+        renderMessages();
+    }, 2000);
+
+    renderUI();
+    renderMessages();
+</script>
+</body>
+</html>
